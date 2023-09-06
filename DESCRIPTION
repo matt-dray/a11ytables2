@@ -18,4 +18,5 @@ Config/testthat/edition: 3
 Imports: 
     cli,
     fs,
-    openxlsx2
+    openxlsx2,
+    yaml
