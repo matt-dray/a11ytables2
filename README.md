@@ -10,7 +10,7 @@ This package is an experimental work-in-progress successor to [{a11ytables}](htt
 The plan is for {a11ytables2} to:
 
 * be built on [{openxlsx2}](https://github.com/JanMarvin/openxlsx2/) instead of {openxlsx}
-* take advantage of a 'YAML blueprint' system for specifying a11ytables-class objects (allowing for arbitrary pre-table metadata, easier addition of multiple tables per sheet, etc)
+* read a valid 'YAML blueprint' to a list to a compliant {openxlsx2} wbWorkbook object (allowing for arbitrary pre-table metadata, easier addition of multiple tables per sheet, etc)
 * take advantage of tools like {cli} and {fs} for better messaging and file handling
 
 You should use {a11ytables} until {a11ytables2} is stable (which may never happen).
