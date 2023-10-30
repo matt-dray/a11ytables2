@@ -5,7 +5,7 @@ cover:
     - This is a second row of information.
   "Period covered":
     - The time period covered by this publication is quarter 3, 2023.   # arbitrary section
-  contact:
+  Contact:
     - You can contact the team via email.
     - "[example@example.com](mailto:example@example.com)"   # arbitrary section, use Markdown to indicate a link
 contents:

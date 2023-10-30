@@ -130,19 +130,15 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
     if (tab == "cover") {
 
-      cover_vector <-
-        blueprint[["cover"]][-1] |>
-
-        stack() |>
-        `[`(_, c("ind", "values")) |>
-        t() |>
-        as.vector()
+      cover_input <- blueprint[["cover"]]
+      cover_input <- cover_input[names(cover_input) != "sheet_title"]
+      cover_content <- unlist(c(rbind(names(cover_input), cover_input)))
 
       wb <-
         openxlsx2::wb_add_data(
           wb,
           sheet = "cover",
-          x = cover_vector,
+          x = cover_content,
           start_row = 2
         )
 
@@ -150,11 +146,8 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
     if (tab == "contents") {
 
-      contents_table <-
-        sheet_titles |>
-        stack() |>
-        `[`(_, c("ind", "values"))
-
+      contents_stack <- stack(sheet_titles)
+      contents_table <- contents_stack[, c("ind", "values")]
       names(contents_table) <- c("Tab title", "Sheet title")
 
       wb <-
@@ -162,7 +155,10 @@ convert_blueprint_to_workbook <- function(blueprint) {
           wb,
           sheet = "contents",
           x = contents_table,
-          start_row = 2
+          start_row = 2,
+          table_name = "contents",
+          table_style = "none",
+          with_filter = FALSE
         )
 
     }
