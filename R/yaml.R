@@ -7,8 +7,8 @@
 #' @param yaml_path Character. A path to a YAML file that contains a valid
 #'      blueprint for a compliant workbook. See details.
 #'
-#' @details
-#' The YAML file must declare certain key-value pairs to be considered valid.
+#' @details The YAML file must declare certain key-value pairs to be considered
+#'     valid.
 #'
 #' @return A nested list. The exact content and structure will depend on the
 #'     supplied blueprint YAML file.
@@ -25,38 +25,44 @@
 #' @export
 read_blueprint <- function(yaml_path) {
 
-  if (!inherits(yaml_path, "character")) {
-    cli::cli_abort(
-      c(
-        "`yaml_path` must be of class 'character'.",
-        x = "You provided an object of class '{class(yaml_path)}'.",
-        i = "Use an existing file path with extension '.yaml'."
-      )
-    )
+  is_char <- inherits(yaml_path, "character")
+
+  is_char_msg <- c(
+    "`yaml_path` must be of class 'character'.",
+    x = "You provided an object of class '{class(yaml_path)}'.",
+    i = "Use an existing file path with extension '.yaml'."
+  )
+
+  if (!is_char) {
+    cli::cli_abort(is_char_msg)
   }
 
-  if (tools::file_ext(yaml_path) != "yaml") {
-    cli::cli_abort(
-      c(
-        "`yaml_path` must be an existing file path with extension '.yaml'.",
-        x = "You provided a file path with extension '.{tools::file_ext(path)}'."
-      )
-    )
+  is_yaml <- tools::file_ext(yaml_path) %in% c("yaml", "yml")
+
+  is_yaml_msg <- c(
+    "`yaml_path` must be an existing file path with extension '.yaml'.",
+    x = "You provided a file path with extension '.{tools::file_ext(path)}'."
+  )
+
+  if (!is_yaml) {
+    cli::cli_abort(is_yaml_msg)
   }
 
-  path <- fs::as_fs_path(yaml_path)
+  yaml_path <- fs::as_fs_path(yaml_path)
 
-  if (!fs::is_file(yaml_path)) {
-    cli::cli_abort(
-      c(
-        "Can't find that file path.",
-        x = "You provided: {path}",
-        i = "'yaml_path' must be an existing file path with extension '.yaml'."
-      )
-    )
+  yaml_exists <- fs::is_file(yaml_path)
+
+  yaml_exists_msg <-       c(
+    "Can't find that file path.",
+    x = "You provided: {path}",
+    i = "`yaml_path` must be an existing file path with extension '.yaml'."
+  )
+
+  if (!yaml_exists) {
+    cli::cli_abort(yaml_exists_msg)
   }
 
-  yaml::read_yaml(path)
+  yaml::read_yaml(yaml_path)
 
 }
 
@@ -65,7 +71,7 @@ read_blueprint <- function(yaml_path) {
 #' Accept a 'blueprint' list, possibly created with [read_blueprint], and
 #' convert its content and structure to an 'openxlsx2' wbWorkbook-class object.
 #'
-#' @param blueprint
+#' @param blueprint List.
 #'
 #' @return An 'openxlsx' wbWorkbook- and R6-class object.
 #'
@@ -88,13 +94,13 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
   is_list <- inherits(blueprint, "list")
 
+  is_list_msg <- c(
+    "`blueprint` must be of class 'list'.",
+    x = "You provided an object of class '{class(blueprint)}'."
+  )
+
   if (!is_list) {
-    cli::cli_abort(
-      c(
-        "`blueprint` must be of class 'list'.",
-        x = "You provided an object of class '{class(blueprint)}'."
-      )
-    )
+    cli::cli_abort(is_list_msg)
   }
 
   # Extract data
@@ -102,23 +108,22 @@ convert_blueprint_to_workbook <- function(blueprint) {
   sheet_titles <- lapply(blueprint, function(tab) tab[["sheet_title"]])
 
   # Create new workbook
-  my_wb <- openxlsx2::wb_workbook()
+  wb <- openxlsx2::wb_workbook()
 
   # Add all tabs
   for (tab_title in tab_titles) {
-    my_wb <- openxlsx2::wb_add_worksheet(my_wb, tab_title)
+    wb <- openxlsx2::wb_add_worksheet(wb, tab_title)
   }
 
   # Add all sheet titles
   for (tab_title in names(sheet_titles)) {
-    my_wb <-
-      openxlsx2::wb_add_data(
-        my_wb,
-        tab_title,
-        sheet_titles[[tab_title]],
-        start_row = 1,
-        start_col = 1
-      )
+    wb <- openxlsx2::wb_add_data(
+      wb,
+      tab_title,
+      sheet_titles[[tab_title]],
+      start_row = 1,
+      start_col = 1
+    )
   }
 
   for (tab in tab_titles) {
@@ -127,13 +132,15 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
       cover_vector <-
         blueprint[["cover"]][-1] |>
+
         stack() |>
         `[`(_, c("ind", "values")) |>
         t() |>
         as.vector()
 
-      my_wb <- my_wb |>
+      wb <-
         openxlsx2::wb_add_data(
+          wb,
           sheet = "cover",
           x = cover_vector,
           start_row = 2
@@ -150,9 +157,9 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
       names(contents_table) <- c("Tab title", "Sheet title")
 
-      my_wb <-
-        my_wb |>
+      wb <-
         openxlsx2::wb_add_data_table(
+          wb,
           sheet = "contents",
           x = contents_table,
           start_row = 2
@@ -162,6 +169,6 @@ convert_blueprint_to_workbook <- function(blueprint) {
 
   }
 
-  return(my_wb)
+  wb
 
 }

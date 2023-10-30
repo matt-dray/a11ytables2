@@ -7,7 +7,7 @@
 convert_blueprint_to_workbook(blueprint)
 }
 \arguments{
-\item{blueprint}{}
+\item{blueprint}{List.}
 }
 \value{
 An 'openxlsx' wbWorkbook- and R6-class object.

@@ -20,7 +20,8 @@ structure of a workbook compliant with Analysis Function best-practice
 spreadsheet guidelines.
 }
 \details{
-The YAML file must declare certain key-value pairs to be considered valid.
+The YAML file must declare certain key-value pairs to be considered
+    valid.
 }
 \examples{
 # Path to an example blueprint YAML file
