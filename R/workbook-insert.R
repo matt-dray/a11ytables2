@@ -1,61 +1,56 @@
-#' Convert a Sheet to a Workbook
-#'
-#' @param sheet_content List, required. Output from [prepare_sheet].
-#'
-#' @return a wbWorkbook object.
-#'
-#' @examples \dontrun{}
-#'
-#' @export
-add_tables_sheet <- function(sheet_content) {
+#' Insert Content to Cover Sheet
+#' @param wb A wbWorkbook object.
+#' @param sheet_name Character, required.
+#' @param sheet_content List, required.
+#' @noRd
+.insert_sections <- function(wb, sheet_name, sheet_content) {
 
-  wb <- openxlsx2::wb_workbook()
-  wb$add_worksheet(sheet_content[["title"]])
+  sheet_sections <- sheet_content[names(sheet_content) == "sections"]
 
-  .insert_metadata(wb, sheet_content)
-  .insert_tables(wb, sheet_content)
-
-  wb
+  wb$add_data(sheet = sheet_name,  x = sheet_sections, start_row = 2)
 
 }
 
-#' Insert Rows of Metadata to a Worksheet
-#' @param wb wbWorkbook object.
-#' @param sheet_content List, required. Output from [prepare_sheet].
+#' Insert Rows of Metadata to a Sheet
+#' @param wb A wbWorkbook object.
+#' @param sheet_name Character, required.
+#' @param sheet_content List, required.
 #' @noRd
-.insert_metadata <- function(wb, sheet_content) {
+.insert_metadata <- function(wb, sheet_name, sheet_content) {
 
   sheet_meta <- sheet_content[names(sheet_content) != "tables"]
 
   for (i in seq_along(sheet_meta)) {
-    wb$add_data(x = sheet_meta[i], start_row = i)
+    wb$add_data(sheet = sheet_name, x = sheet_meta[i], start_row = i)
   }
 
 }
 
-#' Insert One or More Tables to a Worksheet
-#' @param wb wbWorkbook object.
-#' @param sheet_content List, required. Output from [prepare_sheet].
+#' Insert One or More Tables to a Sheet
+#' @param wb A wbWorkbook object.
+#' @param sheet_name Character, required.
+#' @param sheet_content List, required.
 #' @noRd
-.insert_tables <- function(wb, sheet_content) {
+.insert_tables <- function(wb, sheet_name, sheet_content) {
 
   n_tables <- length(sheet_content[["tables"]])
 
   if (n_tables == 1) {
-    .insert_table(wb, sheet_content)
+    .insert_table(wb, sheet_name, sheet_content)
   }
 
   if (n_tables > 1) {
-    .insert_subtables(wb, sheet_content)
+    .insert_subtables(wb, sheet_name, sheet_content)
   }
 
 }
 
-#' Insert One Table to a Worksheet
-#' @param wb wbWorkbook object.
-#' @param sheet_content List, required. Output from [prepare_sheet].
+#' Insert One Table to a Sheet
+#' @param wb A wbWorkbook object.
+#' @param sheet_name Character, required.
+#' @param sheet_content List, required.
 #' @noRd
-.insert_table <- function(wb, sheet_content) {
+.insert_table <- function(wb, sheet_name, sheet_content) {
 
   sheet_meta <- sheet_content[names(sheet_content) != "tables"]
   table_start_row <- length(sheet_meta) + 1
@@ -63,6 +58,7 @@ add_tables_sheet <- function(sheet_content) {
   table_content <- sheet_content[["tables"]][[1]]
 
   wb$add_data_table(
+    sheet = sheet_name,
     x = table_content,
     start_row = table_start_row,
     table_name = table_name,
@@ -71,13 +67,15 @@ add_tables_sheet <- function(sheet_content) {
 
 }
 
-#' Insert Multiple Subtables to a Worksheet
-#' @param wb wbWorkbook object.
-#' @param sheet_content List, required. Output from [prepare_sheet].
+#' Insert Multiple Subtables to a Sheet
+#' @param wb A wbWorkbook object.
+#' @param sheet_name Character, required.
+#' @param sheet_content List, required.
 #' @noRd
 .insert_subtables <- function(wb, sheet_content) {
 
   subtables <- sheet_content[["tables"]]
+
   table_widths <- vector("list", length(subtables))
 
   for (i in seq_along(subtables)) {
@@ -99,10 +97,11 @@ add_tables_sheet <- function(sheet_content) {
     }
 
     subtable_name <-
-      .clean_table_name(names(subtable_content[["title"]]))
+      .clean_table_names(names(subtable_content[["title"]]))
 
     # Insert subtable title
     wb$add_data(
+      sheet = sheet_name,
       x = subtable_content[["title"]],
       start_row = subtable_title_start_row,
       start_col = subtable_start_col
@@ -110,6 +109,7 @@ add_tables_sheet <- function(sheet_content) {
 
     # Insert subtable
     wb$add_data_table(
+      sheet = sheet_name,
       x = subtable_content[["table"]],
       start_row = subtable_start_row,
       start_col = subtable_start_col,
