@@ -6,7 +6,7 @@
 \usage{
 append_tables(
   blueprint,
-  tab_name,
+  sheet_name,
   title,
   subtitle = NULL,
   custom = NULL,
@@ -17,7 +17,7 @@ append_tables(
 \arguments{
 \item{blueprint}{List, required.}
 
-\item{tab_name}{Character vector of length 1, required.}
+\item{sheet_name}{Character vector of length 1, required.}
 
 \item{title}{Character vector of length 1,  required. The title of the sheet.
 Will be placed in cell A1 of output spreadsheet.}

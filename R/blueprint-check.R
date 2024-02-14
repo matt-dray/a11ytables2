@@ -2,65 +2,57 @@
 #' @noRd
 .check_cover_input <- function(
     blueprint,
-    tab_name,
+    sheet_name,
     title,
     subtitle,
     sections
 ) {
-
   .check_title(title)
   .check_subtitle(subtitle)
   .check_sections(sections)
-
 }
 
 #' Check Inputs to the Contents Sheet
 #' @noRd
 .check_contents_input <- function(
     blueprint,
-    tab_name,
+    sheet_name,
     title,
     subtitle,
     custom,
     table
 ) {
-
   .check_title(title)
   .check_subtitle(subtitle)
-
 }
 
 #' Check Inputs to the Notes Sheet
 #' @noRd
 .check_notes_input <- function(
     blueprint,
-    tab_name,
+    sheet_name,
     title,
     subtitle,
     custom,
     table
 ) {
-
   .check_title(title)
   .check_subtitle(subtitle)
-
 }
 
 #' Check Inputs to a Tables Sheet
 #' @noRd
 .check_tables_input <- function(
     blueprint,
-    tab_name,
+    sheet_name,
     title,
     subtitle,
     custom,
     source,
     tables
 ) {
-
   .check_title(title)
   .check_subtitle(subtitle)
-
 }
 
 #' Check Argument Input

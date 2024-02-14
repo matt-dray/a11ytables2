@@ -1,13 +1,67 @@
-#' Create a Workbook
+#' Create a Workbook and Fill with Blueprint Information
 #'
 #' @return A wbWorkbook object.
 #'
 #' @examples
-#' create_workbook()
+#' \dontrun{
+#' bp <- new_blueprint() |>
+#'   append_cover() |>
+#'   append_contents() |>
+#'   append_notes() |>
+#'   append_tables() |>
+#'   append_tables()
+#'
+#' wb <- create_workbook(blueprint)
+#' }
 #'
 #' @export
-create_workbook <- function() {
+generate_workbook <- function(blueprint) {
 
-  openxlsx2::wb_workbook()
+  wb <- openxlsx2::wb_workbook()
 
+  invisible(
+    lapply(
+      list("cover", "contents", "notes", "tables"),
+      function(x) .add_sheet(blueprint, wb, x)
+    )
+  )
+
+  wb
+
+}
+
+#' Add a Sheet to the Workbook
+#' @noRd
+.add_sheet <- function(
+    blueprint,
+    wb,
+    sheet_type = c("cover", "contents", "notes", "tables")
+) {
+
+  sub_blueprint <- .isolate_blueprint_sheet(blueprint, sheet_type)
+
+  for (i in seq_along(sub_blueprint)) {
+
+    sheet_name <- names(sub_blueprint)[i]
+    sheet_content <- sub_blueprint[[i]]
+
+    wb$add_worksheet(sheet = sheet_name)
+    .insert_metadata(wb, sheet_name, sheet_content)
+
+    if (sheet_type == "cover" & length(sub_blueprint) > 0) {
+      .insert_sections(wb, sheet_name, sheet_content)
+    }
+
+    if (sheet_type != "cover" & length(sub_blueprint) > 0) {
+      .insert_tables(wb, sheet_name, sheet_content)
+    }
+
+  }
+
+}
+
+#' Extract Blueprint by Sheet Type
+#' @noRd
+.isolate_blueprint_sheet <- function(blueprint, sheet_type) {
+  Filter(function(x) x[["sheet_type"]] == sheet_type, blueprint)
 }

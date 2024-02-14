@@ -16,7 +16,7 @@ new_blueprint <- function() {
 #' Provide the information required to create a cover sheet.
 #'
 #' @param blueprint List, required.
-#' @param tab_name Character vector of length 1, required.
+#' @param sheet_name Character vector of length 1, required.
 #' @param title Character vector of length 1,  required. The title of the sheet.
 #'   Will be placed in cell A1 of output spreadsheet.
 #' @param subtitle Character vector of length 1, optional, default is `NULL`. A
@@ -40,17 +40,18 @@ new_blueprint <- function() {
 #' @export
 append_cover <- function(
     blueprint,
-    tab_name,
+    sheet_name = "Cover",
     title,
     subtitle = NULL,
     sections
 ) {
 
-  .check_cover_input(blueprint, tab_name, title, subtitle, sections)
+  .check_cover_input(blueprint, sheet_name, title, subtitle, sections)
 
   .append_sheet_elements(
     sheet_type = "cover",
     blueprint = blueprint,
+    sheet_name = sheet_name,
     title = title,
     subtitle = subtitle,
     sections = sections
@@ -61,7 +62,7 @@ append_cover <- function(
 #' Add a Contents Sheet to a Blueprint
 #'
 #' @param blueprint List, required.
-#' @param tab_name Character vector of length 1, required.
+#' @param sheet_name Character vector of length 1, required.
 #' @param title Character vector of length 1,  required. The title of the sheet.
 #'   Will be placed in cell A1 of output spreadsheet.
 #' @param subtitle Character vector of length 1, optional, default is `NULL`. A
@@ -87,19 +88,19 @@ append_cover <- function(
 #' @export
 append_contents <- function(
     blueprint,
-    tab_name = "Contents",
+    sheet_name = "Contents",
     title = "Contents",
     subtitle = NULL,
     custom = NULL,
     table
 ) {
 
-  .check_contents_input(blueprint, tab_name, title, subtitle, custom, table)
+  .check_contents_input(blueprint, sheet_name, title, subtitle, custom, table)
 
   .append_sheet_elements(
     sheet_type = "contents",
     blueprint = blueprint,
-    tab_name = tab_name,
+    sheet_name = sheet_name,
     title = title,
     subtitle = subtitle,
     custom = custom,
@@ -111,7 +112,7 @@ append_contents <- function(
 #' Add a Notes Sheet to a Blueprint
 #'
 #' @param blueprint List, required.
-#' @param tab_name Character vector of length 1, required.
+#' @param sheet_name Character vector of length 1, required.
 #' @param title Character vector of length 1,  required. The title of the sheet.
 #'   Will be placed in cell A1 of output spreadsheet.
 #' @param subtitle Character vector of length 1, optional, default is `NULL`. A
@@ -138,19 +139,19 @@ append_contents <- function(
 #' @export
 append_notes <- function(
     blueprint,
-    tab_name = "Notes",
+    sheet_name = "Notes",
     title = "Notes",
     subtitle = NULL,
     custom = NULL,
     table
 ) {
 
-  .check_notes_input(blueprint, tab_name, title, subtitle, custom, table)
+  .check_notes_input(blueprint, sheet_name, title, subtitle, custom, table)
 
   .append_sheet_elements(
     sheet_type = "notes",
     blueprint = blueprint,
-    tab_name = tab_name,
+    sheet_name = sheet_name,
     title = title,
     subtitle = subtitle,
     custom = custom,
@@ -162,7 +163,7 @@ append_notes <- function(
 #' Add a Tables Sheet to a Blueprint
 #'
 #' @param blueprint List, required.
-#' @param tab_name Character vector of length 1, required.
+#' @param sheet_name Character vector of length 1, required.
 #' @param title Character vector of length 1,  required. The title of the sheet.
 #'   Will be placed in cell A1 of output spreadsheet.
 #' @param subtitle Character vector of length 1, optional, default is `NULL`. A
@@ -203,7 +204,7 @@ append_notes <- function(
 #' @export
 append_tables <- function(
     blueprint,
-    tab_name,
+    sheet_name,
     title,
     subtitle = NULL,
     custom = NULL,
@@ -212,13 +213,13 @@ append_tables <- function(
 ) {
 
   .check_tables_input(
-    blueprint, tab_name, title, subtitle, custom, source, tables
+    blueprint, sheet_name, title, subtitle, custom, source, tables
   )
 
   .append_sheet_elements(
     sheet_type = "tables",
     blueprint = blueprint,
-    tab_name = tab_name,
+    sheet_name = sheet_name,
     title = title,
     subtitle = subtitle,
     custom = custom,
@@ -233,7 +234,7 @@ append_tables <- function(
 .append_sheet_elements <- function(
     sheet_type = c("cover", "contents", "notes", "tables"),
     blueprint = NULL,
-    tab_name = NULL,
+    sheet_name = NULL,
     title = NULL,
     subtitle = NULL,
     sections = NULL,
@@ -254,7 +255,7 @@ append_tables <- function(
 
   sheet_elements <- Filter(function(x) length(x) > 0, sheet_elements)
 
-  .append_to_blueprint(blueprint, tab_name, sheet_elements)
+  .append_to_blueprint(blueprint, sheet_name, sheet_elements)
 
 }
 
@@ -274,8 +275,8 @@ append_tables <- function(
 
 #' Append Content of New Sheet to Existing Blueprint
 #' @noRd
-.append_to_blueprint <- function(blueprint, tab_name, sheet_elements) {
+.append_to_blueprint <- function(blueprint, sheet_name, sheet_elements) {
   blueprint <- c(blueprint, list(sheet_elements))
-  names(blueprint)[length(blueprint)] <- tab_name
+  names(blueprint)[length(blueprint)] <- sheet_name
   blueprint
 }

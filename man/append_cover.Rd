@@ -4,12 +4,12 @@
 \alias{append_cover}
 \title{Add a Cover Sheet to a Blueprint}
 \usage{
-append_cover(blueprint, tab_name, title, subtitle = NULL, sections)
+append_cover(blueprint, sheet_name = "Cover", title, subtitle = NULL, sections)
 }
 \arguments{
 \item{blueprint}{List, required.}
 
-\item{tab_name}{Character vector of length 1, required.}
+\item{sheet_name}{Character vector of length 1, required.}
 
 \item{title}{Character vector of length 1,  required. The title of the sheet.
 Will be placed in cell A1 of output spreadsheet.}
