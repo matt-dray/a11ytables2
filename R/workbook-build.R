@@ -1,5 +1,10 @@
 #' Create a Workbook and Fill with Blueprint Information
 #'
+#' @param blueprint A list, required. A blueprint for creating a workbook with
+#'   one list element for the cover, contents, notes (optional) and tables,
+#'   probably generated using [append_cover], [append_contents], [append_notes]
+#'   and [append_tables].
+#'
 #' @return A wbWorkbook object.
 #'
 #' @examples
@@ -19,12 +24,8 @@ generate_workbook <- function(blueprint) {
 
   wb <- openxlsx2::wb_workbook()
 
-  invisible(
-    lapply(
-      list("cover", "contents", "notes", "tables"),
-      function(x) .add_sheet(blueprint, wb, x)
-    )
-  )
+  sheet_types <- list("cover", "contents", "notes", "tables")
+  invisible(lapply(sheet_types, function(x) .add_sheet(blueprint, wb, x)))
 
   wb
 

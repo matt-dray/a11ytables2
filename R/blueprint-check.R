@@ -1,11 +1,7 @@
 #' Check Inputs to the Cover Sheet
 #' @noRd
 .check_cover_input <- function(
-    blueprint,
-    sheet_name,
-    title,
-    subtitle,
-    sections
+    blueprint, sheet_name, title, subtitle, sections
 ) {
   .check_title(title)
   .check_subtitle(subtitle)
@@ -15,12 +11,7 @@
 #' Check Inputs to the Contents Sheet
 #' @noRd
 .check_contents_input <- function(
-    blueprint,
-    sheet_name,
-    title,
-    subtitle,
-    custom,
-    table
+    blueprint, sheet_name, title, subtitle, custom, table
 ) {
   .check_title(title)
   .check_subtitle(subtitle)
@@ -29,12 +20,7 @@
 #' Check Inputs to the Notes Sheet
 #' @noRd
 .check_notes_input <- function(
-    blueprint,
-    sheet_name,
-    title,
-    subtitle,
-    custom,
-    table
+    blueprint, sheet_name, title, subtitle, custom, table
 ) {
   .check_title(title)
   .check_subtitle(subtitle)
@@ -43,13 +29,7 @@
 #' Check Inputs to a Tables Sheet
 #' @noRd
 .check_tables_input <- function(
-    blueprint,
-    sheet_name,
-    title,
-    subtitle,
-    custom,
-    source,
-    tables
+    blueprint, sheet_name, title, subtitle, custom, source, tables
 ) {
   .check_title(title)
   .check_subtitle(subtitle)

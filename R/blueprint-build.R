@@ -176,17 +176,8 @@ append_notes <- function(
 #' @param source Character vector of length 1, optional, default is `NULL`. The
 #'   source of the data provided in the tables. Will be provided as the final
 #'   row of metadata above the tables.
-#' @param tables List of data.frames, required. Tabular data. See details.
-#'
-#' @details
-#' # Providing tables of data
-#'
-#' If the sheet has a single table, you can provide it as the only element
-#' inside a list, like `list(table_1_df)`. If you are providing more than one
-#' table, each should be a separate sub-list with two elements: a title and a
-#' data.frame, like `list(table_1a_list, table_2a_list)` where `table_1a_list`
-#' is like `list(title = "Table 1a: a table.", table = table_1a_df)`, for
-#' example.
+#' @param tables A data.frame, or a list of data.frames named with table titles,
+#'     required. Tabular statistical data.
 #'
 #' @return A list.
 #'
@@ -246,8 +237,16 @@ append_tables <- function(
 
   if (!is.null(custom)) custom <- .name_custom_elements(custom)
 
+  table_count <- NULL
+  table_count <- if (!is.null(tables)) .make_table_count_sentence(tables)
+
+  notes_present <- NULL
+  has_notes <- .has_notes(title, subtitle, custom, source, table, tables)
+  if (has_notes) notes_present <- "There are notes in this sheet."
+
   sheet_elements <- c(
     list(sheet_type = sheet_type, title = title, subtitle = subtitle),
+    list(table_count = table_count, notes_present = notes_present),
     sections,
     as.list(custom),
     list(source = source, table = table, tables = tables)
@@ -255,7 +254,7 @@ append_tables <- function(
 
   sheet_elements <- Filter(function(x) length(x) > 0, sheet_elements)
 
-  .append_to_blueprint(blueprint, sheet_name, sheet_elements)
+  modifyList(blueprint, setNames(list(sheet_elements), sheet_name))
 
 }
 
@@ -273,10 +272,49 @@ append_tables <- function(
 
 }
 
-#' Append Content of New Sheet to Existing Blueprint
+#' Build a Sentence With the Number of Tables in a Sheet
 #' @noRd
-.append_to_blueprint <- function(blueprint, sheet_name, sheet_elements) {
-  blueprint <- c(blueprint, list(sheet_elements))
-  names(blueprint)[length(blueprint)] <- sheet_name
-  blueprint
+.make_table_count_sentence <- function(tables) {
+
+  n_tables <- as.character(length(tables))
+  if (is.data.frame(tables)) n_tables <- "1"
+
+  if (n_tables == 0) return(NULL)
+
+  n_text <- switch(
+    n_tables,
+    "1" = "one",   "2" = "two",   "3" = "three",
+    "4" = "four",  "5" = "five",  "6" = "six",
+    "7" = "seven", "8" = "eight", "9" = "nine",
+    n_tables
+  )
+
+  paste0(
+    "There ", if (n_tables == 1) "is " else "are ", n_text,
+    " table", if (n_tables > 1) "s", " in this sheet."
+  )
+
+}
+
+.has_notes <- function(
+    title = NULL,
+    subtitle = NULL,
+    custom = NULL,
+    source = NULL,
+    table = NULL,
+    tables = NULL
+) {
+
+  tables_sheet_elements  <-
+    list(title, subtitle, custom, source, table, unlist(tables))
+
+  note_regex <- "\\[[N|n]ote \\d\\]"
+
+  elements_have_notes <- lapply(
+    tables_sheet_elements,
+    function(x) any(grepl(note_regex, c(x, names(x))))
+  )
+
+  any(unlist(elements_have_notes))
+
 }
