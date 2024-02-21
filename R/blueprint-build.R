@@ -238,6 +238,7 @@ append_tables <- function(
   if (!is.null(custom)) custom <- .name_custom_elements(custom)
 
   table_count <- NULL
+  table_count <- if (!is.null(table)) .make_table_count_sentence(table)
   table_count <- if (!is.null(tables)) .make_table_count_sentence(tables)
 
   notes_present <- NULL

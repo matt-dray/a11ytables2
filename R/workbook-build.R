@@ -41,7 +41,7 @@ generate_workbook <- function(blueprint) {
 
   sub_blueprint <- .isolate_blueprint_sheet(blueprint, sheet_type)
 
-  # insert sheets
+  # Insert sheets ----
 
   for (i in seq_along(sub_blueprint)) {
 
@@ -59,13 +59,46 @@ generate_workbook <- function(blueprint) {
       .insert_tables(wb, sheet_name, sheet_content)
     }
 
-    # Styles
+    # Styles ----
+
+    ## Font ----
+
+    wb$set_base_font(
+      font_size = 12,
+      font_color = openxlsx2::wb_color(auto = "1"),
+      font_name = "Arial"
+    )
+
+    ## Titles ----
 
     wb$add_named_style(sheet = sheet_name, name = "Heading 1")
 
     if (any(names(sheet_content) %in% "subtitle")) {
       wb$add_named_style(sheet = sheet_name, dims = "A2", name = "Heading 2")
     }
+
+    if (sheet_type == "tables" && inherits(sheet_content[["tables"]], "list")) {
+
+      subtables <- sheet_content[["tables"]]
+
+      n_tables <- length(subtables)
+      table_widths <- lengths(subtables)
+
+      subtable_start_row <-
+        length(sheet_content[!names(sheet_content) %in% c("sheet_type", "tables")]) + 1
+      subtable_start_columns <- c(1, table_widths[-length(table_widths)] + 2)
+
+      for (i in seq_along(subtable_start_columns)) {
+        wb$add_named_style(
+          sheet = sheet_name,
+          dims = openxlsx2::wb_dims(subtable_start_row, subtable_start_columns[i]),
+          name = "Heading 2"
+        )
+      }
+
+    }
+
+    ## Cover sections ----
 
     if (sheet_type == "cover") {
 
@@ -80,29 +113,6 @@ generate_workbook <- function(blueprint) {
         wb$add_named_style(
           sheet = sheet_name,
           dims = section_start_dims[i],
-          name = "Heading 2"
-        )
-      }
-
-    }
-
-    if (sheet_type == "tables" && inherits(sheet_content[["tables"]], "list")) {
-
-      subtables <- sheet_content[["tables"]]
-
-      n_tables <- length(subtables)
-      table_widths <- lengths(subtables)
-
-      subtable_start_columns_i <- c(1, table_widths[-length(table_widths)] + 2)
-      subtable_start_column <- LETTERS[subtable_start_columns_i]  # TODO: make more robust
-      subtable_start_row <-
-        length(sheet_content[!names(sheet_content) %in% c("sheet_type", "tables")]) + 1
-      subtable_title_dims <- paste0(subtable_start_column, subtable_start_row)
-
-      for (i in seq_along(subtable_title_dims)) {
-        wb$add_named_style(
-          sheet = sheet_name,
-          dims = subtable_title_dims[i],
           name = "Heading 2"
         )
       }

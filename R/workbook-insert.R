@@ -62,10 +62,13 @@
 #' @noRd
 .insert_table <- function(wb, sheet_name, sheet_content) {
 
-  sheet_meta <- sheet_content[!names(sheet_content) %in% c("sheet_type", "tables")]
+  sheet_meta <- sheet_content[!names(sheet_content) %in% c("sheet_type", "table", "tables")]
   table_start_row <- length(sheet_meta) + 1
   table_name <- .clean_table_name(sheet_content[["title"]])
-  table_content <- sheet_content[["tables"]]
+  table_content <- sheet_content[["table"]]  # cover, contents
+  if (any(names(sheet_content) %in% "tables")) table_content <- sheet_content[["tables"]]
+
+  options("openxlsx2.string_nums" = TRUE)
 
   wb$add_data_table(
     sheet = sheet_name,
@@ -75,6 +78,8 @@
     table_style = "none",
     with_filter = FALSE
   )
+
+  options("openxlsx2.string_nums" = NULL)
 
 }
 
@@ -112,6 +117,8 @@
       start_col = subtable_start_col
     )
 
+    options("openxlsx2.string_nums" = TRUE)
+
     # Insert subtable
     wb$add_data_table(
       sheet = sheet_name,
@@ -122,6 +129,9 @@
       table_style = "none",
       with_filter = FALSE
     )
+
+    options("openxlsx2.string_nums" = NULL)
+
 
   }
 
