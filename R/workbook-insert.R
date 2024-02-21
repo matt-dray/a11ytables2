@@ -72,7 +72,8 @@
     x = table_content,
     start_row = table_start_row,
     table_name = table_name,
-    table_style = "none"
+    table_style = "none",
+    with_filter = FALSE
   )
 
 }
@@ -118,7 +119,8 @@
       start_row = subtable_start_row,
       start_col = subtable_start_col,
       table_name = subtable_name,
-      table_style = "none"
+      table_style = "none",
+      with_filter = FALSE
     )
 
   }

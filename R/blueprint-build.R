@@ -104,7 +104,7 @@ append_contents <- function(
     title = title,
     subtitle = subtitle,
     custom = custom,
-    tables = table
+    table = table
   )
 
 }

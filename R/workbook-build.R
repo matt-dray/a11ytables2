@@ -67,6 +67,25 @@ generate_workbook <- function(blueprint) {
       wb$add_named_style(sheet = sheet_name, dims = "A2", name = "Heading 2")
     }
 
+    if (sheet_type == "cover") {
+
+      sections <-
+        sheet_content[!names(sheet_content) %in% c("sheet_type", "title")]
+
+      section_start_rows_i <-  # TODO: looks overengineered
+        c(1, cumsum(lengths(sections)[-length(sections)]) + 2:length(sections)) + 1
+      section_start_dims <- paste0("A", section_start_rows_i)
+
+      for (i in seq_along(section_start_dims)) {
+        wb$add_named_style(
+          sheet = sheet_name,
+          dims = section_start_dims[i],
+          name = "Heading 2"
+        )
+      }
+
+    }
+
     if (sheet_type == "tables" && inherits(sheet_content[["tables"]], "list")) {
 
       subtables <- sheet_content[["tables"]]
@@ -75,7 +94,7 @@ generate_workbook <- function(blueprint) {
       table_widths <- lengths(subtables)
 
       subtable_start_columns_i <- c(1, table_widths[-length(table_widths)] + 2)
-      subtable_start_column <- LETTERS[subtable_start_columns_i]
+      subtable_start_column <- LETTERS[subtable_start_columns_i]  # TODO: make more robust
       subtable_start_row <-
         length(sheet_content[!names(sheet_content) %in% c("sheet_type", "tables")]) + 1
       subtable_title_dims <- paste0(subtable_start_column, subtable_start_row)
