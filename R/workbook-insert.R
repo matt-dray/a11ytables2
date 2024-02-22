@@ -42,12 +42,22 @@
 #' @noRd
 .insert_tables <- function(wb, sheet_name, sheet_content) {
 
-  is_list_of_subtables <- inherits(sheet_content[["tables"]], "list")
-  is_single_table <- is.data.frame(sheet_content[["tables"]])
+  has_table_element <- any(names(sheet_content) %in% "table")
+  has_tables_element <- any(names(sheet_content) %in% "tables")
+
+  if (has_table_element) {
+    is_single_table <- TRUE
+  }
+
+  if (has_tables_element) {
+    is_single_table <- is.data.frame(sheet_content[["tables"]])
+  }
 
   if (is_single_table) {
     .insert_table(wb, sheet_name, sheet_content)
   }
+
+  is_list_of_subtables <- inherits(sheet_content[["tables"]], "list")
 
   if (is_list_of_subtables) {
     .insert_subtables(wb, sheet_name, sheet_content)
