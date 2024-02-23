@@ -91,6 +91,13 @@
 
   options("openxlsx2.string_nums" = NULL)
 
+  wb$add_font(
+    dims = openxlsx2::wb_dims(table_start_row, seq_len(ncol(table_content))),
+    name = "Arial",
+    bold = TRUE,
+    color = wb_colour(auto = "1")
+  )
+
 }
 
 #' Insert Multiple Subtables to a Sheet
@@ -142,6 +149,15 @@
 
     options("openxlsx2.string_nums" = NULL)
 
+    wb$add_font(
+      dims = openxlsx2::wb_dims(
+        subtable_start_row,
+        seq_len(subtable_start_col + ncol(subtable_table))
+      ),
+      name = "Arial",
+      bold = TRUE,
+      color = wb_colour(auto = "1")
+    )
 
   }
 
