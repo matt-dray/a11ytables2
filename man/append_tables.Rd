@@ -35,11 +35,16 @@ source (if provided).}
 source of the data provided in the tables. Will be provided as the final
 row of metadata above the tables.}
 
-\item{tables}{List of data.frames, required. Tabular data. See details.}
+\item{tables}{A data.frame, or a list of data.frames named with table titles,
+required. Tabular statistical data.}
 }
 \value{
 A list.
-
+}
+\description{
+Add a Tables Sheet to a Blueprint
+}
+\examples{
 \dontrun{
 bp <- new_blueprint() |>
   append_cover() |>
@@ -50,17 +55,5 @@ bp <- new_blueprint() |>
 
 bp
 }
-}
-\description{
-Add a Tables Sheet to a Blueprint
-}
-\details{
-# Providing tables of data
 
-If the sheet has a single table, you can provide it as the only element
-inside a list, like `list(table_1_df)`. If you are providing more than one
-table, each should be a separate sub-list with two elements: a title and a
-data.frame, like `list(table_1a_list, table_2a_list)` where `table_1a_list`
-is like `list(title = "Table 1a: a table.", table = table_1a_df)`, for
-example.
 }

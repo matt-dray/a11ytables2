@@ -95,7 +95,7 @@
     dims = openxlsx2::wb_dims(table_start_row, seq_len(ncol(table_content))),
     name = "Arial",
     bold = TRUE,
-    color = wb_colour(auto = "1")
+    color = openxlsx2::wb_colour(auto = "1")
   )
 
 }
@@ -156,7 +156,7 @@
       ),
       name = "Arial",
       bold = TRUE,
-      color = wb_colour(auto = "1")
+      color = openxlsx2::wb_colour(auto = "1")
     )
 
   }
@@ -167,5 +167,10 @@
 #' @param string Character. A table name to be cleaned.
 #' @noRd
 .clean_table_name <- function(string) {
-  gsub("[[:punct:]]|[[:space:]]", "_", tolower(string))
+
+  string <- tolower(string)
+  string <- gsub("\\[note \\d{1,}\\]", "_", string)
+  string <- trimws(string)
+  gsub("[[:punct:]]|[[:space:]]", "_", string)
+
 }

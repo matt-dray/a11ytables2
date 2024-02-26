@@ -181,6 +181,7 @@ append_notes <- function(
 #'
 #' @return A list.
 #'
+#' @examples
 #' \dontrun{
 #' bp <- new_blueprint() |>
 #'   append_cover() |>
@@ -255,7 +256,10 @@ append_tables <- function(
 
   sheet_elements <- Filter(function(x) length(x) > 0, sheet_elements)
 
-  modifyList(blueprint, setNames(list(sheet_elements), sheet_name))
+  utils::modifyList(
+    blueprint,
+    stats::setNames(list(sheet_elements), sheet_name)
+  )
 
 }
 

@@ -6,6 +6,12 @@
 \usage{
 generate_workbook(blueprint)
 }
+\arguments{
+\item{blueprint}{A list, required. A blueprint for creating a workbook with
+one list element for the cover, contents, notes (optional) and tables,
+probably generated using [append_cover], [append_contents], [append_notes]
+and [append_tables].}
+}
 \value{
 A wbWorkbook object.
 }
