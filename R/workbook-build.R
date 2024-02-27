@@ -71,60 +71,10 @@ generate_workbook <- function(blueprint) {
 
     ## Titles ----
 
-    title_dims <- "A1"
-
-    wb$add_named_style(
-      sheet = sheet_name,
-      dims = title_dims,
-      name = "Heading 1",
-    )
-
-    wb$add_font(
-      sheet = sheet_name,
-      dims = title_dims,
-      name = "Comic Sans MS",
-      color = openxlsx2::wb_color(auto = "1"),
-      size = 16,
-      bold = TRUE
-    )
-
-    wb$add_border(
-      sheet = sheet_name,
-      dims = title_dims,
-      top_border = NULL,
-      left_border = NULL,
-      bottom_border = NULL,
-      right_border = NULL
-    )
+    .style_heading(wb, sheet_name)
 
     if (any(names(sheet_content) %in% "subtitle")) {
-
-      subtitle_dims <- "A2"
-
-      wb$add_named_style(
-        sheet = sheet_name,
-        dims = subtitle_dims,
-        name = "Heading 2"
-      )
-
-      wb$add_font(
-        sheet = sheet_name,
-        dims = subtitle_dims,
-        name = "Comic Sans MS",
-        color = openxlsx2::wb_color(auto = "1"),
-        size = 14,
-        bold = TRUE
-      )
-
-      wb$add_border(
-        sheet = sheet_name,
-        dims = subtitle_dims,
-        top_border = NULL,
-        left_border = NULL,
-        bottom_border = NULL,
-        right_border = NULL
-      )
-
+      .style_heading(wb, sheet_name, "Heading 2", "A2")
     }
 
     if (sheet_type == "tables" && inherits(sheet_content[["tables"]], "list")) {
@@ -143,29 +93,7 @@ generate_workbook <- function(blueprint) {
         subtable_title_dims <-
           openxlsx2::wb_dims(subtable_start_row, subtable_start_columns[i])
 
-        wb$add_named_style(
-          sheet = sheet_name,
-          dims = subtable_title_dims,
-          name = "Heading 2"
-        )
-
-        wb$add_font(
-          sheet = sheet_name,
-          dims = subtable_title_dims,
-          name = "Comic Sans MS",
-          color = openxlsx2::wb_color(auto = "1"),
-          size = 14,
-          bold = TRUE
-        )
-
-        wb$add_border(
-          sheet = sheet_name,
-          dims = subtable_title_dims,
-          top_border = NULL,
-          left_border = NULL,
-          bottom_border = NULL,
-          right_border = NULL
-        )
+        .style_heading(wb, sheet_name, "Heading 2", subtable_title_dims)
 
       }
 
@@ -183,33 +111,8 @@ generate_workbook <- function(blueprint) {
       section_start_dims <- paste0("A", section_start_rows_i)
 
       for (i in seq_along(section_start_dims)) {
-
         section_title_dims <- section_start_dims[i]
-
-        wb$add_named_style(
-          sheet = sheet_name,
-          dims = section_title_dims,
-          name = "Heading 2"
-        )
-
-        wb$add_font(
-          sheet = sheet_name,
-          dims = section_title_dims,
-          name = "Comic Sans MS",
-          color = openxlsx2::wb_color(auto = "1"),
-          size = 14,
-          bold = TRUE
-        )
-
-        wb$add_border(
-          sheet = sheet_name,
-          dims = section_title_dims,
-          top_border = NULL,
-          left_border = NULL,
-          bottom_border = NULL,
-          right_border = NULL
-        )
-
+        .style_heading(wb, sheet_name, "Heading 2", section_title_dims)
       }
 
     }
