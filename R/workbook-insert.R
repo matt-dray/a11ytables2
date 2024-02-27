@@ -93,7 +93,7 @@
 
   wb$add_font(
     dims = openxlsx2::wb_dims(table_start_row, seq_len(ncol(table_content))),
-    name = "Arial",
+    name = "Comic Sans MS",
     bold = TRUE,
     color = openxlsx2::wb_colour(auto = "1")
   )
@@ -154,7 +154,7 @@
         subtable_start_row,
         seq_len(subtable_start_col + ncol(subtable_table))
       ),
-      name = "Arial",
+      name = "Comic Sans MS",
       bold = TRUE,
       color = openxlsx2::wb_colour(auto = "1")
     )
