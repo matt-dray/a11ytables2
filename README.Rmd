@@ -19,6 +19,9 @@ knitr::opts_chunk$set(
 [![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
 
+>[!NOTE]
+>This experimental project is now archived. Please see [{aftables}](https://github.com/best-practice-and-impact/aftables), which is a renamed and updated version of the original {a11ytables} package.
+
 ## Purpose
 
 Generate spreadsheet publications that follow [best-practice guidance from the UK Government's Analysis Function](https://analysisfunction.civilservice.gov.uk/policy-store/releasing-statistics-in-spreadsheets/).

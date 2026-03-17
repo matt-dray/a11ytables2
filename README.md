@@ -11,6 +11,11 @@ or
 proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
 
+> \[!NOTE\] This experimental project is now archived. Please see
+> [{aftables}](https://github.com/best-practice-and-impact/aftables),
+> which is a renamed and updated version of the original {a11ytables}
+> package.
+
 ## Purpose
 
 Generate spreadsheet publications that follow [best-practice guidance
@@ -100,7 +105,9 @@ blueprint <-
 ```
 
 <details>
+
 <summary>
+
 Click to see the structure of the blueprint object.
 </summary>
 
